@@ -81,7 +81,7 @@ export default async function ResultPage({ params }: Props) {
   const trendUp = data.next > data.today;
 
   return (
-    <main className="w-full max-w-5xl mx-auto px-4 py-10">
+    <main className="w-full max-w-5xl mx-auto px-4 py-10 pt-24">
       <ResultHeader ticker={data.ticker} trendUp={trendUp} />
       {/* Cards de destaque */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
