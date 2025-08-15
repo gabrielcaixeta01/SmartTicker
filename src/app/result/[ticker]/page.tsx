@@ -49,11 +49,15 @@ export default async function ResultPage({ params }: Props) {
   const { ticker } = params;
 
   let data: StockResultData | null = null;
-  let error = null;
+  let error: Error | null = null;
   try {
     data = await getPrediction(ticker);
-  } catch (e: any) {
-    error = e;
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      error = e;
+    } else {
+      error = new Error("Erro desconhecido");
+    }
   }
 
   if (error) {
@@ -81,7 +85,7 @@ export default async function ResultPage({ params }: Props) {
   const trendUp = data.next > data.today;
 
   return (
-    <main className="w-full max-w-5xl mx-auto px-4 py-10 pt-24">
+    <main className="w-full max-w-5xl mx-auto px-4 py-10 pt-[72px] md:pt-24">
       <ResultHeader ticker={data.ticker} trendUp={trendUp} />
       {/* Cards de destaque */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
