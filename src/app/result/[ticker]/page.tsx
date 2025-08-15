@@ -1,7 +1,10 @@
+// src/app/result/[ticker]/page.tsx
 import StockResult from "@/components/StockResult";
 import Link from "next/link";
 import { Suspense } from "react";
 import ResultHeader from "@/components/ResultHeader";
+
+// ⛔️ Remova qualquer `import type { PageProps } from "next";`
 
 type NewsArticle = {
   title: string;
@@ -30,6 +33,7 @@ type Props = {
 };
 
 async function getPrediction(ticker: string): Promise<StockResultData> {
+  // Usa variável pública em dev; em prod usa VERCEL_URL
   const base =
     process.env.NEXT_PUBLIC_API_URL ??
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
@@ -60,7 +64,9 @@ export default async function ResultPage({ params }: Props) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
             <div className="text-xs text-gray-400 mb-1">Preço Atual</div>
-            <div className="text-2xl font-bold text-blue-300">${data.today.toFixed(2)}</div>
+            <div className="text-2xl font-bold text-blue-300">
+              ${data.today.toFixed(2)}
+            </div>
           </div>
           <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
             <div className="text-xs text-gray-400 mb-1">Previsão</div>
@@ -70,11 +76,15 @@ export default async function ResultPage({ params }: Props) {
           </div>
           <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
             <div className="text-xs text-gray-400 mb-1">Prob. Alta</div>
-            <div className="text-lg font-bold text-green-300">{(data.probUp * 100).toFixed(1)}%</div>
+            <div className="text-lg font-bold text-green-300">
+              {(data.probUp * 100).toFixed(1)}%
+            </div>
           </div>
           <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
             <div className="text-xs text-gray-400 mb-1">Prob. Baixa</div>
-            <div className="text-lg font-bold text-red-300">{(data.probDown * 100).toFixed(1)}%</div>
+            <div className="text-lg font-bold text-red-300">
+              {(data.probDown * 100).toFixed(1)}%
+            </div>
           </div>
         </div>
 
