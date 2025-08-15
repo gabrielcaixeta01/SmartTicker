@@ -1,50 +1,45 @@
 import { NextResponse } from "next/server";
-import { exec } from "child_process";
+import { execFile } from "child_process";
+import { promisify } from "util";
 import path from "path";
 
-export async function POST(req: Request) {
+export const runtime = "nodejs"; // garante runtime Node, não Edge
+
+const execFileAsync = promisify(execFile);
+
+type PredictData = Record<string, unknown>; // ajuste se quiser um tipo mais específico
+
+async function execPythonPredict(ticker: string): Promise<PredictData> {
+  const scriptPath = path.join(process.cwd(), "python", "generate.py");
+  const pythonBin = process.env.PYTHON_PATH ?? "python3";
+
+  const { stdout, stderr } = await execFileAsync(pythonBin, [scriptPath, ticker], {
+    cwd: process.cwd(),
+    env: process.env,
+  });
+
+  if (stderr && stderr.trim().length > 0) {
+    console.error("predict stderr:", stderr);
+  }
+
   try {
-    const { ticker } = await req.json();
+    return JSON.parse(stdout) as PredictData;
+  } catch {
+    throw new Error("Erro ao interpretar JSON do Python");
+  }
+}
 
-    const scriptPath = path.join(process.cwd(), "python", "generate.py");
-    const pythonPath = path.join(process.cwd(), ".venv", "bin", "python");
-    const command = `${pythonPath} ${scriptPath} ${ticker}`;
+export async function POST(req: Request): Promise<Response> {
+  try {
+    const body = (await req.json()) as { ticker?: string };
+    const ticker = body?.ticker;
 
-    return new Promise((resolve) => {
-      exec(command, (error, stdout, stderr) => {
-        if (error) {
-          console.error("Erro ao executar script:", error);
-          return resolve(
-            NextResponse.json(
-              { error: "Erro ao executar script Python" },
-              { status: 500 }
-            )
-          );
-        }
+    if (!ticker || typeof ticker !== "string") {
+      return NextResponse.json({ error: "Ticker inválido" }, { status: 400 });
+    }
 
-        if (stderr) {
-          console.error("Stderr:", stderr);
-        }
-
-        try {
-          const data = JSON.parse(stdout);
-          return resolve(NextResponse.json(data));
-        } catch (parseError) {
-          console.error(
-            "Erro ao fazer parse do stdout:",
-            stdout,
-            "Parse error:",
-            parseError
-          );
-          return resolve(
-            NextResponse.json(
-              { error: "Erro ao interpretar JSON do Python" },
-              { status: 500 }
-            )
-          );
-        }
-      });
-    });
+    const data = await execPythonPredict(ticker);
+    return NextResponse.json(data);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
