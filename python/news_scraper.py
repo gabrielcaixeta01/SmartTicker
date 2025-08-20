@@ -1,6 +1,7 @@
+import os
 import requests
 
-API_KEY = "465c3df16e6c4942be0736eee109fea9"
+API_KEY = os.environ.get("NEWS_API_KEY")
 
 def get_news_articles(ticker):
     url = (
