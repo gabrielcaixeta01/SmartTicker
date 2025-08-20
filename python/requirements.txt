@@ -1,0 +1,11 @@
+yfinance
+matplotlib
+numpy
+pandas
+scikit-learn
+requests
+textblob
+beautifulsoup4
+nltk
+peewee
+pillow

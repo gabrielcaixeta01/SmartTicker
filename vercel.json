@@ -1,0 +1,11 @@
+{
+  "builds": [{ "src": "next.config.ts", "use": "@vercel/next" }],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ],
+  "python": {
+    "version": "3.12"
+  },
+  "postinstall": "pip install -r python/requirements.txt"
+}
