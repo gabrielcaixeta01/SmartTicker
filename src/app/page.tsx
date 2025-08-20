@@ -11,7 +11,7 @@ import { useLang } from "@/context/lang";
 export default function HomePage() {
   const [ticker, setTicker] = useState("");
   const router = useRouter();
-  const { t, lang } = useLang();
+  const { lang } = useLang();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -222,16 +222,17 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto space-y-10 font-light">
           <div>
             <h2 className="text-sm uppercase tracking-widest text-blue-500">
-              Let&#39;s Connect
+              {lang === "pt" ? "Vamos nos conectar" : "Let's Connect"}
             </h2>
             <h3 className="text-3xl md:text-4xl text-white border-b border-gray-700 pb-4">
-              Contact
+              {lang === "pt" ? "Contato" : "Contact"}
             </h3>
           </div>
 
           <p className="text-lg text-gray-400 font-extralight max-w-2xl leading-relaxed">
-            Whether you&#39;re curious about how the project works, want to
-            collaborate, or just say hi — I&#39;m open to connections!
+            {lang === "pt"
+              ? "Se você tem curiosidade sobre o projeto, quer colaborar ou apenas dizer oi — estou aberto a conexões!"
+              : "Whether you're curious about how the project works, want to collaborate, or just say hi — I'm open to connections!"}
           </p>
 
           <div className="space-y-6 text-gray-300 text-base">
@@ -253,7 +254,9 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="hover:text-blue-400 transition"
               >
-                Gabriel Caixeta Romero — LinkedIn
+                {lang === "pt"
+                  ? "Gabriel Caixeta Romero — LinkedIn"
+                  : "Gabriel Caixeta Romero — LinkedIn"}
               </a>
             </div>
 
@@ -275,7 +278,7 @@ export default function HomePage() {
               href="mailto:gabrielcaixetaromero@gmail.com"
               className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-light px-6 py-3 rounded-md transition-all duration-300 shadow-md"
             >
-              Send me an email →
+              {lang === "pt" ? "Me envie um e-mail →" : "Send me an email →"}
             </a>
           </div>
         </div>
