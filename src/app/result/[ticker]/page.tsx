@@ -1,8 +1,10 @@
+"use client";
 // src/app/result/[ticker]/page.tsx
 import StockResult from "@/components/StockResult";
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import ResultHeader from "@/components/ResultHeader";
+import { useLang } from "@/context/lang";
 
 // ⛔️ Remova qualquer `import type { PageProps } from "next";`
 
@@ -33,7 +35,6 @@ type Props = {
 };
 
 async function getPrediction(ticker: string): Promise<StockResultData> {
-  // Usa variável pública em dev; em prod usa VERCEL_URL
   const base =
     process.env.NEXT_PUBLIC_API_URL ??
     (process.env.VERCEL_URL
@@ -52,71 +53,92 @@ async function getPrediction(ticker: string): Promise<StockResultData> {
   return json as StockResultData;
 }
 
-export default async function ResultPage(props: Props) {
-  const { ticker } = await props.params;
+export default function ResultPage(props: Props) {
+  const { t } = useLang();
+  const { ticker } = props.params;
+  const [data, setData] = useState<StockResultData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  try {
-    const data = await getPrediction(ticker);
-    const trendUp = data.next > data.today;
+  useEffect(() => {
+    setLoading(true);
+    getPrediction(ticker)
+      .then((res) => {
+        setData(res);
+        setError(null);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setData(null);
+      })
+      .finally(() => setLoading(false));
+  }, [ticker]);
 
+  if (loading) {
     return (
-      <main className="w-full max-w-5xl mx-auto px-4 py-10 pt-[72px] md:pt-24">
-        <ResultHeader ticker={data.ticker} trendUp={trendUp} />
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
-            <div className="text-xs text-gray-400 mb-1">Preço Atual</div>
-            <div className="text-2xl font-bold text-blue-300">
-              ${data.today.toFixed(2)}
-            </div>
-          </div>
-          <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
-            <div className="text-xs text-gray-400 mb-1">Previsão</div>
-            <div
-              className={`text-2xl font-bold ${
-                trendUp ? "text-green-400" : "text-red-400"
-              }`}
-            >
-              ${data.next.toFixed(2)}
-            </div>
-          </div>
-          <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
-            <div className="text-xs text-gray-400 mb-1">Prob. Alta</div>
-            <div className="text-lg font-bold text-green-300">
-              {(data.probUp * 100).toFixed(1)}%
-            </div>
-          </div>
-          <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
-            <div className="text-xs text-gray-400 mb-1">Prob. Baixa</div>
-            <div className="text-lg font-bold text-red-300">
-              {(data.probDown * 100).toFixed(1)}%
-            </div>
-          </div>
-        </div>
-
-        <Suspense
-          fallback={
-            <div className="text-center text-gray-400">
-              Carregando detalhes...
-            </div>
-          }
-        >
-          <StockResult {...data} ticker={ticker.toUpperCase()} />
-        </Suspense>
+      <main className="w-full max-w-5xl mx-auto px-4 py-20 text-center text-gray-400">
+        {t("loading")}
       </main>
     );
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Erro desconhecido";
+  }
+
+  if (error || !data) {
     return (
       <main className="w-full max-w-3xl mx-auto px-4 py-20 text-center text-red-400">
         <h2 className="text-2xl font-light mb-4">
-          Erro ao buscar dados para &quot;{ticker}&quot;: {message}
+          {t("error")} &quot;{ticker}&quot;: {error || t("error")}
         </h2>
         <Link href="/" className="text-blue-400 underline mt-6 block">
-          ← Voltar
+          {t("back")}
         </Link>
       </main>
     );
   }
+
+  const trendUp = data.next > data.today;
+
+  return (
+    <main className="w-full max-w-5xl mx-auto px-4 py-10 pt-[72px] md:pt-24">
+      <ResultHeader ticker={data.ticker} trendUp={trendUp} />
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
+          <div className="text-xs text-gray-400 mb-1">{t("currentPrice")}</div>
+          <div className="text-2xl font-bold text-blue-300">
+            ${data.today.toFixed(2)}
+          </div>
+        </div>
+        <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
+          <div className="text-xs text-gray-400 mb-1">{t("forecast")}</div>
+          <div
+            className={`text-2xl font-bold ${
+              trendUp ? "text-green-400" : "text-red-400"
+            }`}
+          >
+            ${data.next.toFixed(2)}
+          </div>
+        </div>
+        <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
+          <div className="text-xs text-gray-400 mb-1">{t("probUp")}</div>
+          <div className="text-lg font-bold text-green-300">
+            {(data.probUp * 100).toFixed(1)}%
+          </div>
+        </div>
+        <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
+          <div className="text-xs text-gray-400 mb-1">{t("probDown")}</div>
+          <div className="text-lg font-bold text-red-300">
+            {(data.probDown * 100).toFixed(1)}%
+          </div>
+        </div>
+      </div>
+
+      <Suspense
+        fallback={
+          <div className="text-center text-gray-400">{t("loading")}</div>
+        }
+      >
+        <StockResult {...data} ticker={ticker.toUpperCase()} />
+      </Suspense>
+    </main>
+  );
 }
