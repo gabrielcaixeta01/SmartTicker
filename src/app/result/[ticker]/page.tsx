@@ -29,7 +29,7 @@ type StockResultData = {
   imageNews: string;
 };
 
-type Props = {
+type ResultPageProps = {
   params: { ticker: string };
   searchParams?: Record<string, string | string[] | undefined>;
 };
@@ -53,7 +53,7 @@ async function getPrediction(ticker: string): Promise<StockResultData> {
   return json as StockResultData;
 }
 
-export default function ResultPage(props: Props) {
+export default function ResultPage(props: ResultPageProps) {
   const { t } = useLang();
   const { ticker } = props.params;
   const [data, setData] = useState<StockResultData | null>(null);
