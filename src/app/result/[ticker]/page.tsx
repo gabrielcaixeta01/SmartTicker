@@ -4,7 +4,6 @@ import StockResult from "@/components/StockResult";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import ResultHeader from "@/components/ResultHeader";
-import { useLang } from "@/context/lang";
 
 // ⛔️ Remova qualquer `import type { PageProps } from "next";`
 
@@ -54,7 +53,6 @@ async function getPrediction(ticker: string): Promise<StockResultData> {
 }
 
 export default function ResultPage(props: ResultPageProps) {
-  const { t } = useLang();
   const { ticker } = props.params;
   const [data, setData] = useState<StockResultData | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +75,7 @@ export default function ResultPage(props: ResultPageProps) {
   if (loading) {
     return (
       <main className="w-full max-w-5xl mx-auto px-4 py-20 text-center text-gray-400">
-        {t("loading")}
+        Loading...
       </main>
     );
   }
@@ -86,10 +84,10 @@ export default function ResultPage(props: ResultPageProps) {
     return (
       <main className="w-full max-w-3xl mx-auto px-4 py-20 text-center text-red-400">
         <h2 className="text-2xl font-light mb-4">
-          {t("error")} &quot;{ticker}&quot;: {error || t("error")}
+          Error &quot;{ticker}&quot;: {error || "Error"}
         </h2>
         <Link href="/" className="text-blue-400 underline mt-6 block">
-          {t("back")}
+          Back
         </Link>
       </main>
     );
@@ -103,13 +101,13 @@ export default function ResultPage(props: ResultPageProps) {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
-          <div className="text-xs text-gray-400 mb-1">{t("currentPrice")}</div>
+          <div className="text-xs text-gray-400 mb-1">Current Price</div>
           <div className="text-2xl font-bold text-blue-300">
             ${data.today.toFixed(2)}
           </div>
         </div>
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
-          <div className="text-xs text-gray-400 mb-1">{t("forecast")}</div>
+          <div className="text-xs text-gray-400 mb-1">Forecast</div>
           <div
             className={`text-2xl font-bold ${
               trendUp ? "text-green-400" : "text-red-400"
@@ -119,13 +117,13 @@ export default function ResultPage(props: ResultPageProps) {
           </div>
         </div>
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
-          <div className="text-xs text-gray-400 mb-1">{t("probUp")}</div>
+          <div className="text-xs text-gray-400 mb-1">Prob. Up</div>
           <div className="text-lg font-bold text-green-300">
             {(data.probUp * 100).toFixed(1)}%
           </div>
         </div>
         <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 text-center">
-          <div className="text-xs text-gray-400 mb-1">{t("probDown")}</div>
+          <div className="text-xs text-gray-400 mb-1">Prob. Down</div>
           <div className="text-lg font-bold text-red-300">
             {(data.probDown * 100).toFixed(1)}%
           </div>
@@ -133,9 +131,7 @@ export default function ResultPage(props: ResultPageProps) {
       </div>
 
       <Suspense
-        fallback={
-          <div className="text-center text-gray-400">{t("loading")}</div>
-        }
+        fallback={<div className="text-center text-gray-400">Loading...</div>}
       >
         <StockResult {...data} ticker={ticker.toUpperCase()} />
       </Suspense>
