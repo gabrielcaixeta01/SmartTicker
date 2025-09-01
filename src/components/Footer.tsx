@@ -2,7 +2,7 @@
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-gray-500 py-6 text-center mt-20">
+    <footer className="bg-black text-gray-500 py-6 text-center">
       <p className="text-sm">
         © {new Date().getFullYear()} Stock Predictor. - {' '}
         <a

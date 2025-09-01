@@ -39,7 +39,7 @@ export default function StockResult({
         {ticker} Stock Analysis
       </h2>
 
-      {/* Resumo de Previsões */}
+      {/* Prediction Summary */}
       <section
         id="summary"
         className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 shadow-xl scroll-mt-20"
@@ -71,7 +71,7 @@ export default function StockResult({
         </div>
       </section>
 
-      {/* Gráfico de Preço */}
+      {/* Price Chart */}
       <section id="price" className="space-y-6 scroll-mt-20">
         <h3 className="text-lg border-b border-gray-700 pb-2">
           Historical Price
@@ -85,7 +85,7 @@ export default function StockResult({
         />
       </section>
 
-      {/* Gráfico de Sentimento */}
+      {/* Sentiment Chart */}
       <section className="space-y-6">
         <h3 className="text-lg border-b border-gray-700 pb-2">
           Sentiment Graph
@@ -99,7 +99,7 @@ export default function StockResult({
         />
       </section>
 
-      {/* Indicadores Técnicos */}
+      {/* Technical Indicators */}
       {imageTechnical && (
         <section id="technical" className="space-y-6 scroll-mt-20">
           <h3 className="text-lg border-b border-gray-700 pb-2">
@@ -121,7 +121,7 @@ export default function StockResult({
         </section>
       )}
 
-      {/* Notícias */}
+      {/* News */}
       <section id="news" className="space-y-6 scroll-mt-20">
         <h3 className="text-lg border-b border-gray-700 pb-2">News Overview</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">

@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
 import StockTickerWidget from "@/components/StockTickerWidget";
 import TopStocks from "@/components/TopStocks";
 // ...existing code...
@@ -21,9 +20,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-gray-950 text-white">
-      <Navbar />
-
+    <>
       <div className="relative z-10">
         <StockTickerWidget />
       </div>
@@ -218,6 +215,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </div>
+    </>
   );
 }
