@@ -52,8 +52,11 @@ async function getPrediction(ticker: string): Promise<StockResultData> {
   return json as StockResultData;
 }
 
+import React, { use } from "react";
+
 export default function ResultPage(props: ResultPageProps) {
-  const { ticker } = props.params;
+  // Next.js recomenda: use() para acessar params (App Router)
+  const { ticker } = use(props.params);
   const [data, setData] = useState<StockResultData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
