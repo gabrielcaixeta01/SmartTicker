@@ -1,6 +1,6 @@
 "use client";
 import { FaArrowUp, FaArrowDown, FaShareAlt } from "react-icons/fa";
-import { useLang } from "@/context/lang";
+// ...existing code...
 
 interface ResultHeaderProps {
   ticker: string;
@@ -8,16 +8,16 @@ interface ResultHeaderProps {
 }
 
 export default function ResultHeader({ ticker, trendUp }: ResultHeaderProps) {
-  const { t, lang } = useLang();
+  // ...existing code...
   async function handleShare() {
     if (navigator.share) {
       await navigator.share({
-        title: `${t("stockAnalysis")}: ${ticker.toUpperCase()}`,
+        title: `Análise da Ação: ${ticker.toUpperCase()}`,
         url: window.location.href,
       });
     } else {
       await navigator.clipboard.writeText(window.location.href);
-      alert(lang === "pt" ? "Link copiado!" : "Link copied!");
+      alert("Link copiado!");
     }
   }
 
@@ -39,7 +39,7 @@ export default function ResultHeader({ ticker, trendUp }: ResultHeaderProps) {
           ) : (
             <FaArrowDown className="mr-1" />
           )}
-          {trendUp ? t("trendUp") : t("trendDown")}
+          {trendUp ? "Tendência de Alta" : "Tendência de Baixa"}
         </span>
       </div>
       <div className="flex gap-2">
@@ -47,13 +47,13 @@ export default function ResultHeader({ ticker, trendUp }: ResultHeaderProps) {
           onClick={() => window.history.back()}
           className="px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-gray-300 hover:bg-zinc-700 transition"
         >
-          {t("back")}
+          Voltar
         </button>
         <button
           onClick={handleShare}
           className="px-4 py-2 rounded-lg bg-blue-700 text-white hover:bg-blue-600 flex items-center gap-2 transition"
         >
-          <FaShareAlt /> {t("share")}
+          <FaShareAlt /> Compartilhar
         </button>
       </div>
     </div>

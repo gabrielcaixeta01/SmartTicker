@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FaSmile, FaMeh, FaFrown } from "react-icons/fa";
-import { useLang } from "@/context/lang";
+// ...existing code...
 
 type Props = {
   today: number;
@@ -32,11 +32,11 @@ export default function StockResult({
   imageTechnical,
   ticker,
 }: Props) {
-  const { t, lang } = useLang();
+  // ...existing code...
   return (
     <div className="w-full max-w-5xl mx-auto mt-10 px-4 space-y-12 text-gray-200 font-light tracking-wide">
       <h2 className="text-2xl md:text-3xl text-center">
-        {ticker} {t("stockAnalysis")}
+        {ticker} Stock Analysis
       </h2>
 
       {/* Resumo de Previsões */}
@@ -44,31 +44,29 @@ export default function StockResult({
         id="summary"
         className="bg-zinc-900 border border-zinc-700 rounded-xl p-6 shadow-xl scroll-mt-20"
       >
-        <h3 className="text-xl text-white mb-4">{t("predictionSummary")}</h3>
+        <h3 className="text-xl text-white mb-4">Prediction Summary</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-base text-gray-300">
           <p>
-            <span className="text-gray-400">{t("currentPrice")}:</span> $
+            <span className="text-gray-400">Current Price:</span> $
             {today.toFixed(2)}
           </p>
           <p>
-            <span className="text-gray-400">{t("forecast")}:</span> $
-            {next.toFixed(2)}
+            <span className="text-gray-400">Forecast:</span> ${next.toFixed(2)}
           </p>
           <p>
-            <span className="text-gray-400">{t("modelAccuracy")}:</span>{" "}
+            <span className="text-gray-400">Model Accuracy:</span>{" "}
             {(score * 100).toFixed(2)}%
           </p>
           <p>
-            <span className="text-gray-400">{t("probUp")}:</span>{" "}
+            <span className="text-gray-400">Prob. Up:</span>{" "}
             {(probUp * 100).toFixed(2)}%
           </p>
           <p>
-            <span className="text-gray-400">{t("probDown")}:</span>{" "}
+            <span className="text-gray-400">Prob. Down:</span>{" "}
             {(probDown * 100).toFixed(2)}%
           </p>
           <p>
-            <span className="text-gray-400">{t("newsArticles")}:</span>{" "}
-            {news.length}
+            <span className="text-gray-400">News:</span> {news.length}
           </p>
         </div>
       </section>
@@ -76,7 +74,7 @@ export default function StockResult({
       {/* Gráfico de Preço */}
       <section id="price" className="space-y-6 scroll-mt-20">
         <h3 className="text-lg border-b border-gray-700 pb-2">
-          {t("historicalPrice")}
+          Historical Price
         </h3>
         <Image
           src={`/api/image?name=${imagePrice}`}
@@ -90,7 +88,7 @@ export default function StockResult({
       {/* Gráfico de Sentimento */}
       <section className="space-y-6">
         <h3 className="text-lg border-b border-gray-700 pb-2">
-          {t("sentimentGraph")}
+          Sentiment Graph
         </h3>
         <Image
           src={`/api/image?name=${imageNews}`}
@@ -105,12 +103,13 @@ export default function StockResult({
       {imageTechnical && (
         <section id="technical" className="space-y-6 scroll-mt-20">
           <h3 className="text-lg border-b border-gray-700 pb-2">
-            {t("technicalIndicators")}
+            Technical Indicators
           </h3>
           <p className="text-sm text-gray-400 leading-relaxed">
-            {lang === "pt"
-              ? "Este gráfico mostra as Bandas de Bollinger e o RSI (Índice de Força Relativa). Bandas de Bollinger ajudam a visualizar volatilidade e zonas de sobrecompra/sobrevenda. RSI sugere momentum e mudanças de tendência — acima de 70 é sobrecomprado; abaixo de 30 é sobrevenda."
-              : "This chart shows Bollinger Bands and RSI (Relative Strength Index). Bollinger Bands help visualize volatility and potential overbought/oversold zones. RSI suggests momentum and trend shifts — above 70 means overbought; below 30 means oversold."}
+            This chart shows Bollinger Bands and RSI (Relative Strength Index).
+            Bollinger Bands help visualize volatility and potential
+            overbought/oversold zones. RSI suggests momentum and trend shifts —
+            above 70 means overbought; below 30 means oversold.
           </p>
           <Image
             src={`/api/image?name=${imageTechnical}`}
@@ -124,9 +123,7 @@ export default function StockResult({
 
       {/* Notícias */}
       <section id="news" className="space-y-6 scroll-mt-20">
-        <h3 className="text-lg border-b border-gray-700 pb-2">
-          {t("newsOverview")}
-        </h3>
+        <h3 className="text-lg border-b border-gray-700 pb-2">News Overview</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
           {news.map((item, index) => {
             let sentimentColor = "text-gray-400";
@@ -157,10 +154,7 @@ export default function StockResult({
                   </a>
                 </div>
                 <p className="text-sm text-gray-300 mt-1">
-                  {item.summary ||
-                    (lang === "pt"
-                      ? "Sem resumo disponível."
-                      : "No summary available.")}
+                  {item.summary || "No summary available."}
                 </p>
               </div>
             );

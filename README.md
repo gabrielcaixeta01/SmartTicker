@@ -1,3 +1,13 @@
+# Recomendação para rodar localmente
+
+Sempre inicie o servidor Next.js com a variável de ambiente PYTHON_PATH apontando para o Python do seu ambiente virtual:
+
+```sh
+PYTHON_PATH="$(pwd)/.venv/bin/python" npm run dev
+```
+
+Assim, o backend sempre usará o Python correto e não haverá erro ENOENT.
+
 # SmartTicker: Stock Predictor
 
 SmartTicker is a modern web application for stock prediction and analysis. It combines financial data, technical indicators, and news sentiment to provide users with actionable insights about stocks. The project features a responsive, mobile-first UI, internationalization (English/Portuguese), and a Python backend for predictions.
